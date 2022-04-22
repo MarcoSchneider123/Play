@@ -15,9 +15,9 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
     private const float FlickGestureStartThresholdInPixels = 20f;
     private const float FlickGestureStopThresholdInPixels = 100f;
     private const float FlickAccelerationPerSecond = 0.0005f;
-    
+
     public VisualTreeAsset songEntryUi;
-    
+
     [InjectedInInspector]
     public bool showRouletteItemPlaceholders;
 
@@ -68,7 +68,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
             return Selection.Value.SongMeta;
         }
     }
-    
+
     private readonly List<SongEntryControl> songEntryControls = new();
     public IReadOnlyList<SongEntryControl> SongEntryControls => songEntryControls;
     public SongEntryControl SelectedSongEntryControl => songEntryControls
@@ -80,7 +80,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
     public bool IsFlickGesture { get; private set; }
     public SongEntryControl DragSongRouletteItem { get; private set; }
     public Vector2 DragDistance { get; private set; }
-    
+
     public float MaxAnimTimeInSeconds { get; private set; } = 0.2f;
     public float AnimTimeInSeconds { get; set; }
     public bool IsSongMenuOverlayVisible => SongEntryControls
@@ -150,7 +150,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
                     ? nextPlaceholderControl
                     : null;
             }
-            
+
             int newlyCreatedSongIndex = NumberUtils.Mod(newSelectedSongIndex - (activeEntryPlaceholders.Count / 2), songs.Count);
             CreateSongRouletteItem(songs[newlyCreatedSongIndex], activePlaceholderControlsSortedByPosition.First());
         }
@@ -168,7 +168,8 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
             int newlyCreatedSongIndex = NumberUtils.Mod(newSelectedSongIndex + (activeEntryPlaceholders.Count / 2), songs.Count);
             CreateSongRouletteItem(songs[newlyCreatedSongIndex], activePlaceholderControlsSortedByPosition.Last());
         }
-        Selection.Value = new SongSelection(songs[newSelectedSongIndex] , newSelectedSongIndex, songs.Count);
+
+        Selection.Value = new SongSelection(songs[newSelectedSongIndex], newSelectedSongIndex, songs.Count);
     }
 
     void Update()
@@ -188,12 +189,12 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
         {
             SpawnAndRemoveSongRouletteItems();
         }
-        
+
         AnimTimeInSeconds += Time.deltaTime;
         AnimTimeInSeconds = NumberUtils.Limit(AnimTimeInSeconds, 0, MaxAnimTimeInSeconds);
 
         UpdateFlickGesture();
-        
+
         // Initially, let all items start with full size
         if (!isInitialized)
         {
@@ -434,7 +435,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
         {
             return;
         }
-        
+
         if (Selection.Value.SongMeta != null
             && Selection.Value.SongMeta == songMeta)
         {
@@ -457,7 +458,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
             DragDistance = DragSongRouletteItem.GetPosition() - dragStartPosition;
         }
     }
-    
+
     public void OnEndDrag(Vector2 dragDeltaInPixels)
     {
         CheckStartFlickGesture(dragDeltaInPixels);
@@ -482,7 +483,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
         dragStartPosition = songRouletteItem.GetPosition();
         dragDuration = 0;
     }
-    
+
     private void CheckStartFlickGesture(Vector2 dragDeltaInPixels)
     {
         if (dragDeltaInPixels.magnitude > FlickGestureStartThresholdInPixels)
@@ -496,14 +497,14 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
             dragVelocity = finalDragDistance / dragDuration;
         }
     }
-    
+
     private void UpdateFlickGesture()
     {
         if (!IsFlickGesture)
         {
             return;
         }
-        
+
         // Slowdown a little.
         dragVelocity *= 1 - (1 - FlickAccelerationPerSecond) * Time.deltaTime;
         if (dragVelocity.magnitude < FlickGestureStopThresholdInPixels
@@ -520,7 +521,7 @@ public class SongRouletteControl : MonoBehaviour, INeedInjection, ITranslator
 
         // Stop flick when the touchscreen was pressed again (i.e., a rising flank).
         flickGestureWasNoTouchscreenPressed = flickGestureWasNoTouchscreenPressed || !InputUtils.AnyTouchscreenPressed();
-        
+
         // Simulate drag in flick direction.
         SongEntryControl flickSongRouletteItem = songEntryControls.FirstOrDefault(it => it.SongMeta == SelectedSongMeta);
         OnDrag(flickSongRouletteItem, dragVelocity * Time.deltaTime);

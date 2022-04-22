@@ -32,7 +32,7 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
 
     [InjectedInInspector]
     public SongSelectSceneInputControl songSelectSceneInputControl;
-    
+
     [InjectedInInspector]
     public SongAudioPlayer songAudioPlayer;
 
@@ -44,7 +44,7 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
 
     [InjectedInInspector]
     public CharacterQuickJumpListControl characterQuickJumpListControl;
-    
+
     [InjectedInInspector]
     public SongSelectFocusableNavigator focusableNavigator;
 
@@ -68,6 +68,11 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
 
     [Inject(UxmlName = R.UxmlNames.sceneTitle)]
     private Label sceneTitle;
+    [Inject(UxmlName = R.UxmlNames.artistLabel2)]
+    private Label artistLabel2;
+    [Inject(UxmlName = R.UxmlNames.songLabel)]
+    private Label songLabel;
+
 
     [Inject(UxmlName = R.UxmlNames.inputLegend)]
     private VisualElement inputLegend;
@@ -110,6 +115,9 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
 
     [Inject(UxmlName = R.UxmlNames.localHighScoreContainer)]
     private VisualElement localHighScoreContainer;
+
+    [Inject(UxmlName = R.UxmlNames.songPreviewVideoImage)]
+    public VisualElement SongPreviewVideoImage { get; private set; }
 
     [Inject(UxmlName = R.UxmlNames.onlineHighScoreContainer)]
     private VisualElement onlineHighScoreContainer;
@@ -167,6 +175,12 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
 
     [Inject(UxmlName = R.UxmlNames.videoLegendLabel)]
     private Label videoLegendLabel;
+
+    [Inject(UxmlName = R.UxmlNames.triangleTop)]
+    private VisualElement triangleTop;
+
+    [Inject(UxmlName = R.UxmlNames.triangleBottom)]
+    private VisualElement triangleBottom;
 
     [Inject(UxmlName = R.UxmlNames.songOrderPicker)]
     private ItemPicker songOrderItemPicker;
@@ -235,6 +249,10 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
 
     private void Start()
     {
+
+        triangleTop.transform.rotation = Quaternion.Euler(0, 0, -30);
+        triangleBottom.transform.rotation = Quaternion.Euler(0, 0, -30);
+
         SongMetaManager.Instance.ScanFilesIfNotDoneYet();
         // Give the song search some time, otherwise the "no songs found" label flickers once.
         if (!SongMetaManager.IsSongScanFinished)
@@ -467,6 +485,8 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
             UpdateTopScoreLabels(new List<int>(), localHighScoreContainer);
             UpdateTopScoreLabels(new List<int>(), onlineHighScoreContainer);
         }
+        artistLabel2.text = songMeta.Artist;
+        songLabel.text = songMeta.Title;
     }
 
     private void UpdateTopScoreLabels(List<int> topScores, VisualElement labelContainer)
@@ -498,7 +518,7 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
         {
             return;
         }
-        
+
         // Search title that starts with the text
         SongMeta titleStartsWithMatch = songRouletteControl.Find(it =>
         {
@@ -510,7 +530,7 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
             songRouletteControl.SelectSong(titleStartsWithMatch);
             return;
         }
-        
+
         // Search artist that starts with the text
         SongMeta artistStartsWithMatch = songRouletteControl.Find(it =>
         {
@@ -522,7 +542,7 @@ public class SongSelectSceneControl : MonoBehaviour, INeedInjection, IBinder, IT
             songRouletteControl.SelectSong(artistStartsWithMatch);
             return;
         }
-        
+
         // Search title or artist contains the text
         SongMeta artistOrTitleContainsMatch = songRouletteControl.Find(it =>
         {

@@ -567,5 +567,9 @@ public static partial class R
         public const string warningLabel = "warningLabel";
         public const string yearLabel = "yearLabel";
         public const string yearPropertyContainer = "yearPropertyContainer";
+        public const string triangleTop = "triangleTop";
+        public const string triangleBottom = "triangleBottom";
+        public const string artistLabel2 = "artistLabel2";
+        public const string songLabel = "songLabel";
     }
 }

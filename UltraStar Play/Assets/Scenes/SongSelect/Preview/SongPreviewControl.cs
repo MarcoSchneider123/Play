@@ -33,6 +33,8 @@ public class SongPreviewControl : MonoBehaviour, INeedInjection
 
     [Inject]
     private Settings settings;
+    [Inject]
+    private SongSelectSceneControl songSelectSceneControl;
 
     private SongMeta currentPreviewSongMeta;
     private SongEntryControl currentSongEntryControl;
@@ -75,7 +77,7 @@ public class SongPreviewControl : MonoBehaviour, INeedInjection
             if (songVideoPlayer.HasLoadedVideo
                 && currentSongEntryControl != null)
             {
-                currentSongEntryControl.SongPreviewVideoImage.SetBackgroundImageAlpha(videoPercent);
+                songSelectSceneControl.SongPreviewVideoImage.SetBackgroundImageAlpha(videoPercent);
             }
             else if (songVideoPlayer.HasLoadedBackgroundImage
                      && currentSongEntryControl != null)
@@ -158,7 +160,7 @@ public class SongPreviewControl : MonoBehaviour, INeedInjection
         StopAllCoroutines();
         songAudioPlayer.PauseAudio();
         isFadeInStarted = false;
-        songRouletteControl.SongEntryControls.ForEach(it => it.SongPreviewVideoImage.HideByDisplay());
+        songRouletteControl.SongEntryControls.ForEach(it => songSelectSceneControl.SongPreviewVideoImage.HideByDisplay());
         songRouletteControl.SongEntryControls.ForEach(it => it.SongPreviewBackgroundImage.HideByDisplay());
     }
 
@@ -187,8 +189,8 @@ public class SongPreviewControl : MonoBehaviour, INeedInjection
             return;
         }
 
-        currentSongEntryControl.SongPreviewVideoImage.ShowByDisplay();
-        currentSongEntryControl.SongPreviewVideoImage.SetBackgroundImageAlpha(0);
+        songSelectSceneControl.SongPreviewVideoImage.ShowByDisplay();
+        songSelectSceneControl.SongPreviewVideoImage.SetBackgroundImageAlpha(0);
         currentSongEntryControl.SongPreviewBackgroundImage.ShowByDisplay();
         currentSongEntryControl.SongPreviewBackgroundImage.SetBackgroundImageAlpha(0);
 
@@ -209,7 +211,7 @@ public class SongPreviewControl : MonoBehaviour, INeedInjection
             uiManager.CreateNotificationVisualElement(errorMessage);
             return;
         }
-        
+
         songAudioPlayer.PositionInSongInMillis = previewStartInMillis;
         songAudioPlayer.audioPlayer.volume = 0;
         if (songAudioPlayer.HasAudioClip)

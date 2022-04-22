@@ -65,9 +65,6 @@ public class SongEntryControl : INeedInjection, IDragListener<GeneralDragEvent>,
     [Inject(UxmlName = R.UxmlNames.closeSongOverlayButton)]
     private Button closeSongOverlayButton;
 
-    [Inject(UxmlName = R.UxmlNames.songPreviewVideoImage)]
-    public VisualElement SongPreviewVideoImage { get; private set; }
-
     [Inject(UxmlName = R.UxmlNames.songPreviewBackgroundImage)]
     public VisualElement SongPreviewBackgroundImage { get; private set; }
 
@@ -159,7 +156,7 @@ public class SongEntryControl : INeedInjection, IDragListener<GeneralDragEvent>,
             Dispose();
             return;
         }
-        
+
         if (songRouletteControl.IsDrag
             || songRouletteControl.IsFlickGesture)
         {
@@ -244,7 +241,7 @@ public class SongEntryControl : INeedInjection, IDragListener<GeneralDragEvent>,
     {
         return new Vector2(VisualElement.resolvedStyle.left, VisualElement.resolvedStyle.top);
     }
-    
+
     public void SetSize(Vector2 newSize)
     {
         VisualElement.style.width = newSize.x;
@@ -261,7 +258,7 @@ public class SongEntryControl : INeedInjection, IDragListener<GeneralDragEvent>,
         VisualElement.style.left = newPosition.x;
         VisualElement.style.top = newPosition.y;
     }
-    
+
     public void StartAnimationTowardsTargetPlaceholder()
     {
         animStartPosition = GetPosition();
@@ -277,7 +274,7 @@ public class SongEntryControl : INeedInjection, IDragListener<GeneralDragEvent>,
 
     public void OnInjectionFinished()
     {
-        SongPreviewVideoImage.HideByDisplay();
+        songSelectSceneControl.SongPreviewVideoImage.HideByDisplay();
         SongPreviewBackgroundImage.HideByDisplay();
 
         HideSongMenuOverlay();
@@ -327,7 +324,7 @@ public class SongEntryControl : INeedInjection, IDragListener<GeneralDragEvent>,
                 ignoreNextClickEvent = true;
             }
         });
-        
+
         songEntryUiRoot.RegisterCallback<PointerDownEvent>(evt => OnPointerDown(evt), TrickleDown.TrickleDown);
         songEntryUiRoot.RegisterCallback<PointerUpEvent>(_ => OnPointerUp(), TrickleDown.TrickleDown);
 
